@@ -1,7 +1,7 @@
 id = "agokule/ticktick-integration"
 name = "Ticktick Integration"
 version = "0.1.0"
-plugin_api = 9
+plugin_api = 22 # require() of relative .luau modules
 author = "agokule"
 license = "MIT"
 dependencies = []
