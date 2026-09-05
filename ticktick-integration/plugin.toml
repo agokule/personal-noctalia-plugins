@@ -1,0 +1,23 @@
+id = "agokule/ticktick-integration"
+name = "Ticktick Integration"
+version = "0.1.0"
+plugin_api = 9
+author = "agokule"
+license = "MIT"
+dependencies = []
+tags = ["productivity"]
+icon = "checklist"
+description = "Adds integration with Ticktick through their OneAPI, add and mark tasks as complete through Noctalia!"
+
+[[setting]]
+key = "api_key"
+type = "string"
+label_key = "settings.api_key.label"
+description_key = "settings.api_key.description"
+
+[[launcher_provider]]
+id = "ticktick-new"
+entry = "new_task.luau"
+prefix = "tt-new"
+icon = "circle-plus"
+
