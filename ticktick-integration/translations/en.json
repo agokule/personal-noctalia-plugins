@@ -2,7 +2,7 @@
   "settings": {
     "api_key": {
       "label": "Ticktick API Key",
-      "description": "Generate this by going to Settings > \"Manage\" (next to \"API Keys\") > \"Add New Key\""
+      "description": "In the TickTick web app, click your avatar, then go to Settings > \"Account\" > \"API Token\" and create a token."
     }
   }
 }
