@@ -4,5 +4,5 @@
       "label": "Ticktick API Key",
       "description": "Generate this by going to Settings > \"Manage\" (next to \"API Keys\") > \"Add New Key\""
     }
-  },
+  }
 }
