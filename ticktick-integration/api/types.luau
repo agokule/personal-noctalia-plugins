@@ -9,5 +9,20 @@ export type TicktickProject = {
   kind: string
 }
 
+export type TicktickTask = {
+  id: string,
+  projectId: string,
+  sortOrder: number,
+  title: string,
+  content: string,
+  timeZone: string,
+  isAllDay: boolean,
+  priority: number,
+  completedTime: string,
+  status: number,
+  etag: string,
+  kind: string
+}
+
 return {}
 
