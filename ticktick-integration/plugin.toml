@@ -9,6 +9,10 @@ tags = ["productivity"]
 icon = "checklist"
 description = "Manage your todo-list in Ticktick through Noctalia"
 
+[[service]]
+id = "ticktick-update"
+entry = "ticktick-service.luau"
+
 [[setting]]
 key = "api_key"
 type = "string"
