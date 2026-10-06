@@ -4,13 +4,17 @@
 -- the syntax it understands.
 
 local SmartRecognition = require("./smart_recognition/init.luau")
+local types = require('./utils/types.luau')
 
 function onQuery(text: string)
   if text == "" then
     launcher.setResults(text, {})
     return
   end
-  local task = SmartRecognition.parseTask(text)
+
+  local data: types.TicktickPluginData = noctalia.state.get('data')
+  local task = SmartRecognition.parseTask(text, data.project_names)
+
   local title = task.title
   if title == "" then title = text end
   launcher.setResults(text, {
@@ -19,7 +23,9 @@ function onQuery(text: string)
 end
 
 function onActivate(id: string)
-  local task = SmartRecognition.parseTask(id)
+  local data: types.TicktickPluginData = noctalia.state.get('data')
+  local task = SmartRecognition.parseTask(id, data.project_names)
+
   local title = task.title
   if title == "" then title = id end
   noctalia.notify("New Task", title .. "\n" .. SmartRecognition.describeTask(task))
