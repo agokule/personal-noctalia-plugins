@@ -4,6 +4,12 @@ local M = {}
 
 local types = require("./types.luau")
 
+-- res.ok only means the request reached the server: a 401 or a 500 still has
+-- it set, so success also needs a 2xx status.
+function M.is_success(res: HttpResponse): boolean
+  return res.ok and res.status >= 200 and res.status < 300
+end
+
 function M.get_projects(cb: ({types.TicktickProject}) -> ())
   noctalia.http(
     {
@@ -13,8 +19,8 @@ function M.get_projects(cb: ({types.TicktickProject}) -> ())
       }
     },
     function(res: HttpResponse)
-      if not res.ok then
-        noctalia.notifyError("response not ok", res.body)
+      if not M.is_success(res) then
+        noctalia.notifyError("response not ok", `HTTP {res.status}: {res.body}`)
         return
       end
 
@@ -36,8 +42,8 @@ function M.create_task(task: types.TicktickTask, cb: (HttpResponse) -> ())
       body = noctalia.json.encode(task, false)
     },
     function(res: HttpResponse)
-      if not res.ok then
-        noctalia.notifyError("Ticktick API response not ok", res.body)
+      if not M.is_success(res) then
+        noctalia.notifyError("Ticktick API response not ok", `HTTP {res.status}: {res.body}`)
       end
 
       cb(res)

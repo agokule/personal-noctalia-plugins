@@ -33,7 +33,7 @@ function onActivate(id: string)
       local title = task.title
       if title == "" then title = id end
 
-      if res.ok then
+      if api.is_success(res) then
         noctalia.notify("New Task", title .. "\n" .. SmartRecognition.describeTask(task))
       end
     end
