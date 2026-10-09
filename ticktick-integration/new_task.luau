@@ -5,6 +5,8 @@
 
 local SmartRecognition = require("./smart_recognition/init.luau")
 local types = require('./utils/types.luau')
+local api = require('./api/requests.luau')
+local convert = require('./api/convert.luau')
 
 function onQuery(text: string)
   if text == "" then
@@ -26,7 +28,14 @@ function onActivate(id: string)
   local data: types.TicktickPluginData = noctalia.state.get('data')
   local task = SmartRecognition.parseTask(id, data.project_names)
 
-  local title = task.title
-  if title == "" then title = id end
-  noctalia.notify("New Task", title .. "\n" .. SmartRecognition.describeTask(task))
+  api.create_task(convert.toTicktickTask(task, data.projects),
+    function (res: HttpResponse)
+      local title = task.title
+      if title == "" then title = id end
+
+      if res.ok then
+        noctalia.notify("New Task", title .. "\n" .. SmartRecognition.describeTask(task))
+      end
+    end
+  )
 end
