@@ -23,5 +23,5 @@ description_key = "settings.api_key.description"
 id = "ticktick-new"
 entry = "new_task.luau"
 prefix = "tt-new"
-icon = "circle-plus"
+glyph = "circle-plus"
 

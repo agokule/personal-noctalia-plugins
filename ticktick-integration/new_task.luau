@@ -20,7 +20,7 @@ function onQuery(text: string)
   local title = task.title
   if title == "" then title = text end
   launcher.setResults(text, {
-    { id = text, title = title, subtitle = SmartRecognition.describeTask(task), icon = "circle-plus" },
+    { id = text, title = title, subtitle = SmartRecognition.describeTask(task), glyph = "circle-plus" },
   })
 end
 
