@@ -1,4 +1,4 @@
-local ticktick = require('./api/init.luau')
+local ticktick = require('./api/requests.luau')
 local types = require('./utils/types.luau')
 local api_types = require('./api/types.luau')
 
@@ -30,6 +30,4 @@ function update()
     noctalia.state.set('data', data)
   end)
 end
-
-
 
