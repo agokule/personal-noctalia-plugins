@@ -299,7 +299,10 @@ TickTick is a todo app with a developer API. Intended features:
 
 Layout:
 - `ticktick-service.luau` (`ticktick-update`) — service; every 5 minutes it fetches `GET /open/v1/project` and
-  publishes state key `data`, shaped `{ projects, project_names }` (`utils/types.luau`'s `PluginData`).
+  today's undone tasks (`POST /open/v1/task/undone` over today's local 00:00–23:59:59), and publishes state key
+  `data`, shaped `{ projects, project_names, today_tasks }` (`utils/types.luau`'s `PluginData`). `today_tasks` is
+  sorted by `comes_before`: all-day tasks first, then by time, with ties going to the higher priority, then the
+  lower `sortOrder`, then the id. Today is the machine's local day, not the TickTick account's time zone.
 - `api/requests.luau` — HTTP calls (`get_projects`, `create_task`, `get_undone_tasks`, `complete_tasks`) and
   `is_success(res)`, the 2xx check every caller should use instead of `res.ok`. Every request carries
   `Authorization: Bearer <api_key>`.
@@ -310,9 +313,9 @@ Layout:
   so if no-list tasks ever go missing, look here.
 - `smart_recognition/` — the parser (below). `plugin_api` is 22, for `require`.
 
-The `api_key` plugin-level setting holds the user's TickTick API token and has no default. The widgets will need
-the service to grow into the "service owns the data" pattern above: today's tasks plus a command key for
-complete/edit, with each cached task keeping both `id` and `projectId`.
+The `api_key` plugin-level setting holds the user's TickTick API token and has no default. The service publishes
+today's tasks (each keeps both `id` and `projectId`); for the widgets it still needs to grow the rest of the
+"service owns the data" pattern above, a command key for complete/edit.
 
 ### TickTick Open API
 
@@ -351,8 +354,9 @@ and completing a task needs its `projectId` as well as its id, so whatever the w
 
 `ticktick-integration/smart_recognition/` parses quick-add text the way TickTick's Smart Recognition does: dates,
 times, ranges, repeat rules as RRULEs, early and postponed reminders. It also handles three markers TickTick's help
-page doesn't document: `!priority`, `#tag`, and `~list` / `^list`. `init.luau` is the only module entries require
-(by its full path; the name is not special to the host). Its header comment is the syntax reference, because the
+page doesn't document: `!priority`, `#tag`, and `~list` / `^list`. `init.luau` is the parser's entry point
+(required by its full path; the name is not special to the host). The service also requires `calendar.luau`
+directly, for `isoToEpoch` and the local-day bounds. Its header comment is the syntax reference, because the
 help page's own tables are images.
 
 - `calendar.luau` — the `Moment` type and all date math. It deliberately avoids `os.time(table)`, whose local-vs-UTC
