@@ -298,14 +298,19 @@ TickTick is a todo app with a developer API. Intended features:
    *Not started.*
 
 Layout:
-- `ticktick-service.luau` (`ticktick-update`) — service; every 5 minutes it fetches `GET /open/v1/project` and
-  today's undone tasks (`POST /open/v1/task/undone` over today's local 00:00–23:59:59), and publishes state key
-  `data`, shaped `{ projects, project_names, today_tasks }` (`utils/types.luau`'s `PluginData`). `today_tasks` is
-  sorted by `comes_before`: all-day tasks first, then by time, with ties going to the higher priority, then the
-  lower `sortOrder`, then the id. Today is the machine's local day, not the TickTick account's time zone.
-- `api/requests.luau` — HTTP calls (`get_projects`, `create_task`, `get_undone_tasks`, `complete_tasks`) and
-  `is_success(res)`, the 2xx check every caller should use instead of `res.ok`. Every request carries
-  `Authorization: Bearer <api_key>`.
+- `ticktick-service.luau` (`ticktick-update`) — service; every 5 minutes it fetches `GET /open/v1/project`,
+  today's undone tasks (`POST /open/v1/task/undone` over today's local 00:00–23:59:59) and overdue ones, and
+  publishes state key `data`, shaped `{ projects, project_names, today_tasks, overdue_tasks }` (`utils/types.luau`'s
+  `PluginData`). Both task lists are sorted by `comes_before`: day by day, all-day tasks first within a day, then by
+  time, with ties going to the higher priority, then the lower `sortOrder`, then the id. Today is the machine's
+  local day, not the TickTick account's time zone.
+  - Overdue means undone and **ended** before today. `POST /open/v1/task/filter` (`status = {0}`, `endDate` =
+    yesterday 23:59:59) only bounds `startDate`, so `ended_before` drops tasks that started earlier but still run
+    today. A multi-day all-day task's `dueDate` is the midnight *after* its last day; a single-day one has
+    `dueDate == startDate` or none. The filter returns at most 200 tasks.
+- `api/requests.luau` — HTTP calls (`get_projects`, `create_task`, `get_undone_tasks`, `filter_tasks`,
+  `complete_tasks`) and `is_success(res)`, the 2xx check every caller should use instead of `res.ok`. Every
+  request carries `Authorization: Bearer <api_key>`.
 - `api/types.luau` — `Project`, `Task` (the Open API's Task schema; only `title` and `projectId`
   are required on create).
 - `api/convert.luau` — `toTask(parsed, projects)`: `ParsedTask` → Task body. It resolves `~list` names to

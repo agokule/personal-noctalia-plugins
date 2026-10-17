@@ -219,6 +219,7 @@ return {
   nextMonthDay = nextMonthDay,
   nextYearDay = nextYearDay,
   nowMoment = nowMoment,
+  tzOffsetMinutes = tzOffsetMinutes, -- the local UTC offset, e.g. -240 for -0400
   momentToIso = momentToIso, -- "2026-03-06T21:00:00+0100", for the OpenAPI call
   isoToEpoch = isoToEpoch, -- the reverse, as seconds since 1970, for ordering
   formatMoment = formatMoment, -- "Fri 6 Mar 2026 9:00pm", for the launcher
