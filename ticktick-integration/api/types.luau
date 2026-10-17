@@ -1,4 +1,4 @@
-export type TicktickProject = {
+export type Project = {
   id: string,
   name: string,
   color: string,
@@ -12,7 +12,7 @@ export type TicktickProject = {
 -- described in https://developer.ticktick.com/docs/index.html#/openapi?id=task-1
 -- Only title and projectId are required when creating a task; the server fills
 -- in the rest, so everything else is optional here.
-export type TicktickTask = {
+export type Task = {
   id: string?,
   projectId: string,
   title: string,

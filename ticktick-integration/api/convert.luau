@@ -13,7 +13,7 @@ local M = {}
 local INBOX_ID = "inbox"
 
 -- Finds the id of the project the parser matched by name, or the inbox.
-local function projectIdFor(name: string?, projects: {types.TicktickProject}): string
+local function projectIdFor(name: string?, projects: {types.Project}): string
   if name then
     for _, project in ipairs(projects) do
       if project.name == name then return project.id end
@@ -39,11 +39,11 @@ end
   projectId is required. A title the parser emptied entirely ("tomorrow 9am")
   falls back to the raw input, since title is required too.
 ]]
-function M.toTicktickTask(task: SmartRecognition.ParsedTask, projects: {types.TicktickProject}): types.TicktickTask
+function M.toTask(task: SmartRecognition.ParsedTask, projects: {types.Project}): types.Task
   local title = task.title
   if title == "" then title = task.raw end
 
-  local out: types.TicktickTask = {
+  local out: types.Task = {
     title = title,
     projectId = projectIdFor(task.list, projects),
     priority = task.priority,

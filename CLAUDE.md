@@ -299,12 +299,12 @@ TickTick is a todo app with a developer API. Intended features:
 
 Layout:
 - `ticktick-service.luau` (`ticktick-update`) — service; every 5 minutes it fetches `GET /open/v1/project` and
-  publishes state key `data`, shaped `{ projects, project_names }` (`utils/types.luau`'s `TicktickPluginData`).
+  publishes state key `data`, shaped `{ projects, project_names }` (`utils/types.luau`'s `PluginData`).
 - `api/requests.luau` — HTTP calls (`get_projects`, `create_task`) and `is_success(res)`, the 2xx check every
   caller should use instead of `res.ok`. Every request carries `Authorization: Bearer <api_key>`.
-- `api/types.luau` — `TicktickProject`, `TicktickTask` (the Open API's Task schema; only `title` and `projectId`
+- `api/types.luau` — `Project`, `Task` (the Open API's Task schema; only `title` and `projectId`
   are required on create).
-- `api/convert.luau` — `toTicktickTask(parsed, projects)`: `ParsedTask` → Task body. It resolves `~list` names to
+- `api/convert.luau` — `toTask(parsed, projects)`: `ParsedTask` → Task body. It resolves `~list` names to
   project ids and falls back to `"inbox"`. The docs only document the `inbox` alias on the filter/undone endpoints,
   so if no-list tasks ever go missing, look here.
 - `smart_recognition/` — the parser (below). `plugin_api` is 22, for `require`.

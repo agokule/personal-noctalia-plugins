@@ -15,7 +15,7 @@ function onQuery(text: string)
     return
   end
 
-  local data: types.TicktickPluginData = state.pluginData()
+  local data: types.PluginData = state.pluginData()
   local task = SmartRecognition.parseTask(text, data.project_names)
 
   local title = task.title
@@ -26,10 +26,10 @@ function onQuery(text: string)
 end
 
 function onActivate(id: string)
-  local data: types.TicktickPluginData = state.pluginData()
+  local data: types.PluginData = state.pluginData()
   local task = SmartRecognition.parseTask(id, data.project_names)
 
-  api.create_task(convert.toTicktickTask(task, data.projects),
+  api.create_task(convert.toTask(task, data.projects),
     function (res: HttpResponse)
       local title = task.title
       if title == "" then title = id end

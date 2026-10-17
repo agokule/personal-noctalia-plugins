@@ -10,7 +10,7 @@ function M.is_success(res: HttpResponse): boolean
   return res.ok and res.status >= 200 and res.status < 300
 end
 
-function M.get_projects(cb: ({types.TicktickProject}) -> ())
+function M.get_projects(cb: ({types.Project}) -> ())
   noctalia.http(
     {
       url = BASE_URL .. '/open/v1/project',
@@ -30,7 +30,7 @@ function M.get_projects(cb: ({types.TicktickProject}) -> ())
   )
 end
 
-function M.create_task(task: types.TicktickTask, cb: (HttpResponse) -> ())
+function M.create_task(task: types.Task, cb: (HttpResponse) -> ())
   noctalia.http(
     {
       url = BASE_URL .. '/open/v1/task',

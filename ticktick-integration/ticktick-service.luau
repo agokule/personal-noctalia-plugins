@@ -11,19 +11,19 @@ local started = false
 function update()
   if not started then
     started = true
-    local default_plugin_data: types.TicktickPluginData = {
+    local default_plugin_data: types.PluginData = {
       projects = {},
       project_names = {},
     }
     noctalia.state.set('data', default_plugin_data)
   end
 
-  ticktick.get_projects(function (projects: {api_types.TicktickProject})
-    local data: types.TicktickPluginData = state.pluginData()
+  ticktick.get_projects(function (projects: {api_types.Project})
+    local data: types.PluginData = state.pluginData()
     data.projects = projects
 
     local project_names: {string} = {}
-    for index, proj: api_types.TicktickProject in ipairs(projects) do
+    for index, proj: api_types.Project in ipairs(projects) do
       table.insert(project_names, proj.name)
     end
     data.project_names = project_names
