@@ -77,6 +77,18 @@ export type UndoneTasksBody = {
   endDate: string, -- end of the range, not before startDate, e.g. "2026-07-14T23:59:59+0000"
 }
 
+-- Body of POST /open/v1/task/filter, which responds with {Task}: at most 200
+-- tasks that match every filter given.
+export type FilterTasksBody = {
+  projectIds: {string}?, -- only tasks in these projects
+  startDate: string?, -- only tasks whose startDate is at or after this
+  endDate: string?, -- only tasks whose startDate is at or before this
+  priority: {number}?, -- only these priorities: 0 none, 1 low, 3 medium, 5 high
+  tag: {string}?, -- only tasks that have all of these tags
+  kind: {string}?, -- only these kinds: "TEXT", "NOTE", "CHECKLIST"
+  status: {number}?, -- only these statuses, e.g. { 0 } for open, { 2 } for completed
+}
+
 -- Body of POST /open/v1/task/completeTasks, which completes tasks of one
 -- project and responds with the ids it completed ({string}).
 export type CompleteTasksBody = {

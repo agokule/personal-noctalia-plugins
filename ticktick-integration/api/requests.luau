@@ -77,6 +77,32 @@ function M.get_undone_tasks(api_body: api_types.UndoneTasksBody, cb: ({api_types
   )
 end
 
+-- Fetches at most 200 tasks matching every filter in api_body. As with
+-- get_undone_tasks, leave list filters out rather than empty. cb only runs on
+-- success.
+function M.filter_tasks(api_body: api_types.FilterTasksBody, cb: ({api_types.Task}) -> ())
+  noctalia.http(
+    {
+      url = BASE_URL .. '/open/v1/task/filter',
+      method = "POST",
+      headers = {
+        "Authorization: Bearer " .. noctalia.getConfig("api_key"),
+        "Content-Type: application/json"
+      },
+      body = noctalia.json.encode(api_body, false)
+    },
+    function(res: HttpResponse)
+      if not M.is_success(res) then
+        noctalia.notifyError("Ticktick API response not ok", `HTTP {res.status}: {res.body}`)
+        return
+      end
+
+      local api_tasks = noctalia.json.decode(res.body)
+      cb(api_tasks)
+    end
+  )
+end
+
 -- Completes up to 50 tasks of one project (the inbox when api_body.projectId is
 -- left out). A successful response's body is a JSON array of the ids it
 -- completed.
