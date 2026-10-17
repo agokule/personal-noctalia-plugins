@@ -2,7 +2,7 @@
 -- Conversions between the parser's ParsedTask and the Open API's Task body.
 
 local SmartRecognition = require("../smart_recognition/init.luau")
-local types = require("./types.luau")
+local api_types = require("./types.luau")
 
 local M = {}
 
@@ -13,10 +13,10 @@ local M = {}
 local INBOX_ID = "inbox"
 
 -- Finds the id of the project the parser matched by name, or the inbox.
-local function projectIdFor(name: string?, projects: {types.Project}): string
+local function projectIdFor(name: string?, apiProjects: {api_types.Project}): string
   if name then
-    for _, project in ipairs(projects) do
-      if project.name == name then return project.id end
+    for _, apiProject in ipairs(apiProjects) do
+      if apiProject.name == name then return apiProject.id end
     end
   end
   return INBOX_ID
@@ -32,35 +32,35 @@ end
 --[[
   Builds the body for POST /open/v1/task from a parsed quick-add string.
 
-    task      the ParsedTask from SmartRecognition.parseTask
-    projects  the cached project list, to resolve `task.list` to an id
+    parsed       the ParsedTask from SmartRecognition.parseTask
+    apiProjects  the cached project list, to resolve `parsed.list` to an id
 
   A task with no ~list, or one that matched nothing, goes to the inbox, since
   projectId is required. A title the parser emptied entirely ("tomorrow 9am")
   falls back to the raw input, since title is required too.
 ]]
-function M.toTask(task: SmartRecognition.ParsedTask, projects: {types.Project}): types.Task
-  local title = task.title
-  if title == "" then title = task.raw end
+function M.toTask(parsed: SmartRecognition.ParsedTask, apiProjects: {api_types.Project}): api_types.Task
+  local title = parsed.title
+  if title == "" then title = parsed.raw end
 
-  local out: types.Task = {
+  local apiTask: api_types.Task = {
     title = title,
-    projectId = projectIdFor(task.list, projects),
-    priority = task.priority,
-    tags = nonEmpty(task.tags),
-    repeatFlag = task.repeatFlag,
-    reminders = nonEmpty(task.reminders),
+    projectId = projectIdFor(parsed.list, apiProjects),
+    priority = parsed.priority,
+    tags = nonEmpty(parsed.tags),
+    repeatFlag = parsed.repeatFlag,
+    reminders = nonEmpty(parsed.reminders),
   }
 
-  if task.dueDate then
-    out.isAllDay = task.isAllDay
-    out.dueDate = SmartRecognition.momentToIso(task.dueDate)
+  if parsed.dueDate then
+    apiTask.isAllDay = parsed.isAllDay
+    apiTask.dueDate = SmartRecognition.momentToIso(parsed.dueDate)
   end
-  if task.startDate then
-    out.startDate = SmartRecognition.momentToIso(task.startDate)
+  if parsed.startDate then
+    apiTask.startDate = SmartRecognition.momentToIso(parsed.startDate)
   end
 
-  return out
+  return apiTask
 end
 
 return M

@@ -401,3 +401,8 @@ commits end up.
 Luau files start with `--!nonstrict`, indent with 2 spaces, and separate sections with `-- ── name ───` banners.
 Requires are explicitly relative **and include the extension** (`require("./calendar.luau")`), resolved from the
 requiring file's directory.
+
+Names say whether something is shaped by the TickTick Open API or is the plugin's own. `api/types.luau` is
+required as `api_types` and `utils/types.luau` as `internal_types`, never as a bare `types`. A variable holding API
+data carries an `api` prefix (`api_task`, `api_projects`; `apiTask` in camelCase files). Internal values are named
+for what they are (`parsed` for a `ParsedTask`, `plugin_data` for `PluginData`).
