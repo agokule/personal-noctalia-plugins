@@ -178,6 +178,19 @@ local function momentToIso(m: Moment): string
   )
 end
 
+-- Seconds since the Unix epoch for a date-time the OpenAPI sends back, with or
+-- without milliseconds ("2026-03-05T00:00:00.000+0000"). nil if it won't parse.
+local function isoToEpoch(iso: string): number?
+  local y, mo, d, h, mi, s, sign, oh, om =
+    string.match(iso, "^(%d+)-(%d+)-(%d+)T(%d+):(%d+):(%d+)[%.%d]*([+-])(%d%d):?(%d%d)$")
+  if not y then return nil end
+  -- The pattern captures only digits there, so no tonumber here can fail.
+  local off = (tonumber(oh) :: number) * 60 + (tonumber(om) :: number)
+  if sign == "-" then off = -off end
+  local m = moment(tonumber(y), tonumber(mo), tonumber(d), tonumber(h), tonumber(mi), tonumber(s))
+  return (momentMinutes(m) - off) * 60 + m.sec
+end
+
 local function formatMoment(m: Moment, allDay: boolean?): string
   local out = string.format("%s %d %s %d", DAY_NAMES[weekdayOf(m) + 1], m.day, MONTH_NAMES[m.month], m.year)
   if not allDay then
@@ -207,5 +220,6 @@ return {
   nextYearDay = nextYearDay,
   nowMoment = nowMoment,
   momentToIso = momentToIso, -- "2026-03-06T21:00:00+0100", for the OpenAPI call
+  isoToEpoch = isoToEpoch, -- the reverse, as seconds since 1970, for ordering
   formatMoment = formatMoment, -- "Fri 6 Mar 2026 9:00pm", for the launcher
 }
