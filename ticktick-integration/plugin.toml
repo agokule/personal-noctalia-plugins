@@ -25,3 +25,7 @@ entry = "new_task.luau"
 prefix = "tt-new"
 glyph = "circle-plus"
 
+[[widget]]
+id = "ticktick-widget"
+entry = "widget.luau"
+
