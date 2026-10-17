@@ -1,5 +1,6 @@
 local ticktick = require('./api/requests.luau')
 local types = require('./utils/types.luau')
+local state = require("./utils/state.luau")
 local api_types = require('./api/types.luau')
 
 -- update every 5 minutes for now
@@ -18,7 +19,7 @@ function update()
   end
 
   ticktick.get_projects(function (projects: {api_types.TicktickProject})
-    local data: types.TicktickPluginData = noctalia.state.get("data")
+    local data: types.TicktickPluginData = state.pluginData()
     data.projects = projects
 
     local project_names: {string} = {}

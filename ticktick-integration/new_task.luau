@@ -5,14 +5,9 @@
 
 local SmartRecognition = require("./smart_recognition/init.luau")
 local types = require('./utils/types.luau')
+local state = require("./utils/state.luau")
 local api = require('./api/requests.luau')
 local convert = require('./api/convert.luau')
-
--- The service publishes `data` once its first fetch lands; until then there are
--- no lists to match, so ~list markers stay unresolved and tasks go to the inbox.
-local function pluginData(): types.TicktickPluginData
-  return noctalia.state.get('data') or { projects = {}, project_names = {} }
-end
 
 function onQuery(text: string)
   if text == "" then
@@ -20,7 +15,7 @@ function onQuery(text: string)
     return
   end
 
-  local data: types.TicktickPluginData = pluginData()
+  local data: types.TicktickPluginData = state.pluginData()
   local task = SmartRecognition.parseTask(text, data.project_names)
 
   local title = task.title
@@ -31,7 +26,7 @@ function onQuery(text: string)
 end
 
 function onActivate(id: string)
-  local data: types.TicktickPluginData = pluginData()
+  local data: types.TicktickPluginData = state.pluginData()
   local task = SmartRecognition.parseTask(id, data.project_names)
 
   api.create_task(convert.toTicktickTask(task, data.projects),
