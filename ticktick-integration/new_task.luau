@@ -36,6 +36,7 @@ function onActivate(id: string)
 
       if api.is_success(res) then
         noctalia.notify("New Task", title .. "\n" .. SmartRecognition.describeTask(parsed))
+        noctalia.state.set('should_update', true)
       end
     end
   )

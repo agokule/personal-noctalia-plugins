@@ -141,3 +141,5 @@ function update()
   refresh_overdue_tasks()
 end
 
+noctalia.state.watch('should_update', update)
+
