@@ -1,0 +1,18 @@
+id = "agokule/umbriel-scratchpads"
+name = "Umbriel Scratchpads"
+version = "0.1.0"
+plugin_api = 32 # tooltip on ui.row
+author = "agokule"
+license = "MIT"
+dependencies = ["umbriel"]
+tags = ["umbriel", "indicator", "bar"]
+icon = "stack-2"
+description = "Shows populated Umbriel scratchpads as bar chips that toggle on click"
+
+[[service]]
+id = "scratchpad-state"
+entry = "service.luau"
+
+[[widget]]
+id = "scratchpads"
+entry = "widget.luau"
