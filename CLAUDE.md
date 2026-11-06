@@ -9,6 +9,8 @@ Luau scripts the shell loads and calls; there is no build step and no compiled a
 to the plugin store, so the store's submission rules (see "Publishing" below) are optional here.
 
 - `ticktick-integration/` (`agokule/ticktick-integration`) — the plugin under active development.
+- `umbriel-scratchpads/` (`agokule/umbriel-scratchpads`) — bar chips for Umbriel scratchpads, which Noctalia's taskbar
+  deliberately leaves out.
 - `example/` — **not one of these plugins.** A copy of `noctalia/example` from the official-plugins repo, kept as
   read-only API documentation. Don't edit it, "fix" it, or copy its id or settings into a real plugin. It differs
   from upstream only cosmetically; upstream may have moved on, so check there for anything new.
