@@ -12,7 +12,7 @@ local completed_time = 0
 
 local max_delta_t = 2000
 
-local task_to_show: api_types.Task
+local task_to_show: api_types.Task?
 
 local function reset_from_comppleted()
   barWidget.setColor("on_surface")
@@ -27,6 +27,12 @@ function update()
     task_to_show = data.overdue_tasks[1]
   else
     task_to_show = data.today_tasks[1]
+  end
+
+  if task_to_show == nil then
+    barWidget.setGlyph(glyph_finished_task)
+    barWidget.setText("No pending tasks!")
+    return
   end
 
   if not completed then
